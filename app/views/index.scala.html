@@ -1,0 +1,61 @@
+@(list3 : List[Search],listRemain : List[Search])
+
+
+@import bootstrap3._
+@import play.api.libs.json._
+@import play.api.libs.functional.syntax._
+@import models.JsonMappers._
+
+@main("Git Hub Search") {
+
+	<form id="form">
+	    <div class="form-group ">
+	    	<label class="col-sm-2 control-label">Search</label>
+		    <div class="col-sm-10">
+		      <input type="text" 
+		             class="form-control" 
+		             id="search" 
+		             name="search" 
+		             value=""
+		             placeholder="Search" />
+		      <span class="help-block">Please enter search term</span>
+		      <span class="help-block"></span>
+		    </div>
+		    <div class="form-group">
+	    <div class="col-sm-offset-2 col-sm-10">
+	      <button id="submit" type="button" class="btn btn-primary">Search</button>
+	      <button id="cancel" class="btn cancel">Cancel</button>
+	    </div>
+	  	</div>
+		    <label class="col-sm-2 control-label"></label>
+		    <div class="col-sm-10">
+		      @for(value <- list3){
+		      	<span>@value.search</span><br />
+		      }
+		      @if(listRemain.size > 0){
+		      	<a id="seeMore">See More ...</a>
+		      }
+		    </div>
+		     <label class="col-sm-2 control-label"></label>
+		    <div class="col-sm-10 hide" id="remainingList">
+		      @for(value <- listRemain){
+		      	<span>@value.search</span><br />
+		      }
+		    </div>
+  		</div>
+	        
+	    
+  	</form>   
+	<script>
+		$(function() {
+			$('#submit').click(function() {
+				window.location = '/' + $('#search').val()
+			})
+
+			$('#seeMore').click(function(){
+				$('#remainingList').toggleClass('hide')
+				$('#remainingList').hasClass('hide') ? $('#seeMore').html('See More ...') : $('#seeMore').html('Hide ...') 
+			})
+		});
+	</script>
+}

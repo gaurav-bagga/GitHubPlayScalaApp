@@ -1,0 +1,30 @@
+@(repo : String,list: List[RepositoryBranchCount])
+
+
+@import bootstrap3._
+
+@main("Git Hub Search Result") {
+
+	<table class="table table-condensed">
+  <tr class="warning">
+			<th>Name</th>
+			<th>Number Of Branches</th>
+		</tr>
+  	@for(rbc <- list){
+  		<tr class="warning">
+			<td><a id="@rbc.repo.name" class="searchOn">@rbc.repo.name</a></td>
+			<td>@rbc.count</td>
+		</tr>
+	}
+  
+</table>
+
+<script>
+	$(function(){
+		$('.searchOn').click(function(){
+			window.location = "/@repo/" + $(this).attr("id")
+			})	
+	})
+</script>
+	
+}

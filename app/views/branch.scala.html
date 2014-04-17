@@ -1,0 +1,22 @@
+@(list: List[BranchCommit])
+
+
+@import bootstrap3._
+
+@main("Git Hub Search Result") {
+
+	<table class="table table-condensed">
+  <tr class="warning">
+			<th>Name</th>
+			<th>Last Updated</th>
+		</tr>
+  	@for(bc <- list){
+  		<tr class="warning">
+			<td>@bc.name</td>
+			<td>@bc.modified</td>
+		</tr>
+	}
+  
+</table>
+	
+}
