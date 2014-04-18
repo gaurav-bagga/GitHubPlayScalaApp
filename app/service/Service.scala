@@ -73,11 +73,11 @@ object Service {
     json match {
           case Some(ojson) => {
             val list = ojson.as[List[Repository]]
-            val rbc = MutableList[RepositoryBranchCount]()
-            list.foreach(repo =>{
-              rbc += RepositoryBranchCount(repo,Await.result(RemoteService.getBranches(searchTerm,repo.name).map(json => json.get.as[List[Branch]].size), FiniteDuration(5,SECONDS)))
+            var rbc = List[Future[RepositoryBranchCount]]()
+            list.foreach(repo => {
+              rbc  = RemoteService.getBranches(searchTerm,repo.name).map(json => RepositoryBranchCount(repo,json.get.as[List[Branch]].size)) :: rbc
             })
-            Future{rbc.toList}
+            Future.sequence(rbc) 
           }
           
           case None => Future{List[RepositoryBranchCount]()}
@@ -88,11 +88,11 @@ object Service {
     json match {
           case Some(ojson) => {
             val list = ojson.as[List[Branch]]
-            val bc = MutableList[BranchCommit]()
+            var bc = List[Future[BranchCommit]]()
             list.foreach(branch =>{
-              bc += BranchCommit(branch.name,Await.result(RemoteService.getBrancheCommits(owner, repo, branch.name).map(json => json.get.as[BranchCommit].modified), FiniteDuration(5,SECONDS)))
+              bc = RemoteService.getBrancheCommits(owner, repo, branch.name).map(json => BranchCommit(branch.name,json.get.as[BranchCommit].modified)) :: bc
             })
-            Future{bc.toList}
+            Future.sequence(bc) 
           }
           
           case None => Future{List[BranchCommit]()}
